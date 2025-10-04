@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CassiniConnect.Core.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250309112423_InitIdentity")]
-    partial class InitIdentity
+    [Migration("20250318214940_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,9 @@ namespace CassiniConnect.Core.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("LanguageCodes");
                 });
 
@@ -107,7 +110,8 @@ namespace CassiniConnect.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Presenters");
                 });
@@ -267,16 +271,41 @@ namespace CassiniConnect.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("Code")
                         .IsUnique();
 
                     b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("CassiniConnect.Core.Models.Teaching.SubjectName", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("LanguageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.ToTable("SubjectNames");
                 });
 
             modelBuilder.Entity("CassiniConnect.Core.Models.Teaching.Teacher", b =>
@@ -297,7 +326,8 @@ namespace CassiniConnect.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Teachers");
                 });
@@ -683,7 +713,7 @@ namespace CassiniConnect.Core.Migrations
             modelBuilder.Entity("CassiniConnect.Core.Models.Presentation.PresenterBooking", b =>
                 {
                     b.HasOne("CassiniConnect.Core.Models.Presentation.Presenter", "Presenter")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("PresenterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -700,7 +730,7 @@ namespace CassiniConnect.Core.Migrations
                         .IsRequired();
 
                     b.HasOne("CassiniConnect.Core.Models.Presentation.Presenter", "Presenter")
-                        .WithMany()
+                        .WithMany("Details")
                         .HasForeignKey("PresenterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -760,6 +790,25 @@ namespace CassiniConnect.Core.Migrations
                         .IsRequired();
 
                     b.Navigation("GroupActivity");
+                });
+
+            modelBuilder.Entity("CassiniConnect.Core.Models.Teaching.SubjectName", b =>
+                {
+                    b.HasOne("CassiniConnect.Core.Models.Helpers.LanguageCode", "Language")
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CassiniConnect.Core.Models.Teaching.Subject", "Subject")
+                        .WithMany("SubjectNames")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Language");
+
+                    b.Navigation("Subject");
                 });
 
             modelBuilder.Entity("CassiniConnect.Core.Models.Teaching.Teacher", b =>
@@ -929,6 +978,18 @@ namespace CassiniConnect.Core.Migrations
             modelBuilder.Entity("CassiniConnect.Core.Models.EventCalendar.Event", b =>
                 {
                     b.Navigation("EventDetails");
+                });
+
+            modelBuilder.Entity("CassiniConnect.Core.Models.Presentation.Presenter", b =>
+                {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("Details");
+                });
+
+            modelBuilder.Entity("CassiniConnect.Core.Models.Teaching.Subject", b =>
+                {
+                    b.Navigation("SubjectNames");
                 });
 
             modelBuilder.Entity("CassiniConnect.Core.Models.Teaching.Teacher", b =>

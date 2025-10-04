@@ -15,11 +15,10 @@ namespace CassiniConnect.Core.Models.Teaching
         [ForeignKey(nameof(User))]
         public Guid UserId { get; set; }
         public float Rate { get; set; }
-        public string Description { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
         public User User { get; set; } = null!;
         public ICollection<Subject> Subjects { get; set; } = [];
         public ICollection<TutoringAppointment> TutoringAppointments { get; set; } = [];
-        public ICollection<TeacherDescription> TeacherDescriptions { get; set;} = [];
+        public ICollection<TeacherDescription> TeacherDescriptions { get; set; } = [];
     }
 }

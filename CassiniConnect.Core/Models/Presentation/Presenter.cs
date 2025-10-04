@@ -14,5 +14,7 @@ namespace CassiniConnect.Core.Models.Presentation
         [ForeignKey("Users")]
         public Guid UserId { get; set; }
         public string Image { get; set; } = string.Empty;
+        public ICollection<PresenterDetail> Details { get; set; } = [];
+        public ICollection<PresenterBooking> Bookings { get; set; } = [];
     }
 }

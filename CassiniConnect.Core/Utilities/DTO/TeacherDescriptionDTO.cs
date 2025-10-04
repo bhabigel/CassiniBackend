@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace CassiniConnect.Core.Utilities.DTO
 {
+    [Serializable]
     public class TeacherDescriptionDTO
     {
-        public Guid LanguageId { get; set; }
+        public string LanguageCode { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
     }
 }

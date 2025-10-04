@@ -10,7 +10,8 @@ namespace CassiniConnect.Core.Models.Teaching
     {
         [Key]
         public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
         public ICollection<Teacher> Teachers { get; set; } = [];
+        public ICollection<SubjectName> SubjectNames { get; set; } = [];
     }
 }

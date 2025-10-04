@@ -11,7 +11,7 @@ namespace CassiniConnect.Core.Models.Teaching
     {
         [Key]
         public Guid Id { get; set; }
-        [ForeignKey(nameof(TutoringAppointment))]
+        [ForeignKey(nameof(Appointment))]
         public Guid AppointmentId { get; set; }
         public TutoringAppointment Appointment  { get; set; } = null!;
         public float Price { get; set; }

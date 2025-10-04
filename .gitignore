@@ -1,3 +1,14 @@
 #Binary
 bin/
 obj/
+
+#wwwroot
+wwwroot/
+
+#Tests
+.coverage
+coverage*/
+TestResults/
+
+#Env
+.env

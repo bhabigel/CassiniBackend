@@ -18,7 +18,7 @@ namespace CassiniConnect.Core.Models.Teaching
         public Guid TeacherId { get; set; }
         [ForeignKey(nameof(Subject))]
         public Guid SubjectId { get; set; }
-        [ForeignKey(nameof(TeachingLocation))]
+        [ForeignKey(nameof(Location))]
         public Guid LocationId { get; set; }
         public User User { get; set; } = null!;
         public Teacher Teacher { get; set; } = null!;

@@ -12,9 +12,9 @@ namespace CassiniConnect.Core.Models.Teaching
     {
         [Key]
         public Guid Id { get; set; }
-        [ForeignKey(nameof(TeacherId))]
+        [ForeignKey(nameof(Teacher))]
         public Guid TeacherId { get; set; }
-        [ForeignKey(nameof(LanguageId))]
+        [ForeignKey(nameof(Language))]
         public Guid LanguageId { get; set; }
         public string Description { get; set; } = string.Empty;
         public LanguageCode Language { get; set; } = null!;

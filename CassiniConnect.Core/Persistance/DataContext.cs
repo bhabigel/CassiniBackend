@@ -10,6 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CassiniConnect.Core.Persistance
 {
+    /// <summary>
+    /// Adatkontextus - összes tábló elérőhelye, összeköttetés közvetlenül az adatbázissal
+    /// Örököl az IdentityDbContext osztályból, egy sajátos User és Role entitást használva
+    /// </summary>
     public class DataContext : IdentityDbContext<User, Role, Guid>
     {
         public DataContext(DbContextOptions options) : base(options) { }
@@ -19,6 +23,7 @@ namespace CassiniConnect.Core.Persistance
         #endregion
         #region Teaching
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<SubjectName> SubjectNames { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<TeacherDescription> TeacherDescriptions { get; set; }
         public DbSet<TeachingLocation> TeachingLocations { get; set; }
@@ -55,7 +60,10 @@ namespace CassiniConnect.Core.Persistance
             #endregion
 
             #region unique constraints
-            builder.Entity<Subject>().HasIndex(s => s.Name).IsUnique();
+            builder.Entity<Subject>().HasIndex(s => s.Code).IsUnique();
+            builder.Entity<Teacher>().HasIndex(t => t.UserId).IsUnique();
+            builder.Entity<Presenter>().HasIndex(p => p.UserId).IsUnique();
+            builder.Entity<LanguageCode>().HasIndex(l => l.Code).IsUnique();
             #endregion
         }
     }

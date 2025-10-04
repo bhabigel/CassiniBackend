@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: cassini-api
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env  
+    environment:
+      ConnectionStrings__DefaultConnection: ${CONNECTION_STRING}
+
+      JwtSettings__SecretKey: ${JwtSettings__SecretKey}
+      JwtSettings__Issuer: ${JwtSettings__Issuer}
+      JwtSettings__Audience: ${JwtSettings__Audience}
+
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
+    ports:
+      - "5000:80"
+    volumes:
+      - storage_data:/app/storage
+
+volumes:
+  postgres_data:
+  storage_data:

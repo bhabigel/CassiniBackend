@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CassiniConnect.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class InitIdentity : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,7 +43,7 @@ namespace CassiniConnect.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false)
+                    Code = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -115,6 +115,32 @@ namespace CassiniConnect.Core.Migrations
                         column: x => x.RoleId,
                         principalTable: "Roles",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubjectNames",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    SubjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    LanguageId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubjectNames", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubjectNames_LanguageCodes_LanguageId",
+                        column: x => x.LanguageId,
+                        principalTable: "LanguageCodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectNames_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -597,6 +623,12 @@ namespace CassiniConnect.Core.Migrations
                 column: "ParticipantsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_LanguageCodes_Code",
+                table: "LanguageCodes",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PresenterBookings_PresenterId",
                 table: "PresenterBookings",
                 column: "PresenterId");
@@ -614,7 +646,8 @@ namespace CassiniConnect.Core.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Presenters_UserId",
                 table: "Presenters",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_PresenterSessions_BookingId",
@@ -633,9 +666,19 @@ namespace CassiniConnect.Core.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subjects_Name",
+                name: "IX_SubjectNames_LanguageId",
+                table: "SubjectNames",
+                column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubjectNames_SubjectId",
+                table: "SubjectNames",
+                column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subjects_Code",
                 table: "Subjects",
-                column: "Name",
+                column: "Code",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -656,7 +699,8 @@ namespace CassiniConnect.Core.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Teachers_UserId",
                 table: "Teachers",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TutoringAppointments_LocationId",
@@ -736,6 +780,9 @@ namespace CassiniConnect.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "SubjectNames");
 
             migrationBuilder.DropTable(
                 name: "SubjectTeacher");
